@@ -8,12 +8,7 @@ const IpTimeout = require('./models/IpTimeout');
 mongoose.connect(process.env.MONGODB_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-})
-// 	.then(async () => {
-// 	if (true) return;
-// 	const link = await Link.create({ url: "https://www.redeemermv.org/", alias: "home" });
-// 	console.log("created link " + link._id);
-// });
+});
 
 const app = express();
 
@@ -36,17 +31,18 @@ async function checkTimeout(req, res, next) {
 	if (mainIp) {
 		const ipTimeout = await IpTimeout.findOne({ ip: mainIp });
 		if (!!ipTimeout) {
-			// const millisecondsLeft = (ipTimeout.createdAt.getTime() + IpTimeout.TIMEOUT_DURATION_SECONDS*1000) - new Date().getTime();
-			return res.json({
+			return res.status(429).json({
 				error: "rate_limited",
 				message: "Please try again later.",
-				// message: "Please try again after " + millisecondsLeft / 1000,
-				// milliseconds_left: millisecondsLeft,
 			});
 		}
 	}
 	next();
 }
+
+app.get("/", (req, res) => {
+	res.sendFile("./views/index.html", {root: __dirname});
+});
 
 app.get('/:alias', checkTimeout, async (req, res, next) => {
 	const alias = req.params.alias;
@@ -56,6 +52,7 @@ app.get('/:alias', checkTimeout, async (req, res, next) => {
 
 	if (!link) {
 		next();
+		// Create a visit record anyways for the unmapped alias.
 		Visit.create({
 			ips: ips,
 			timestamp: new Date(),
@@ -84,18 +81,10 @@ app.get('/:alias', checkTimeout, async (req, res, next) => {
 			},
 		}).limit(MAX_VISITS_THRESHOLD + 5);
 		
-		if (visits.length > MAX_VISITS_THRESHOLD) {
+		if (visits.length >= MAX_VISITS_THRESHOLD) {
 			const ipTimeout = await IpTimeout.create({ ip: mainIp });
-			// "hit blacklist"
-			// console.log("hit blacklist", mainIp, new Date());
-			// console.log(visits.map((v) => ({ timestamp: v.timestamp, id: v._id })))
-			// console.log(visits.map((v) => ({ timestamp: v.timestamp, ips: v.ips })))
 		}
 	}
-});
-
-app.get("/", (req, res) => {
-	res.sendFile("./views/index.html", {root: __dirname});
 });
 
 app.get("/*", (req, res) => {
