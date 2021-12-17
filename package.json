@@ -1,7 +1,18 @@
 {
+  "name": "urlhost",
+  "version": "1.0.0",
+  "private": true,
+  "description": "URL hosting service.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtso/urlhost.git"
+  },
+  "license": "MIT",
   "scripts": {
-	"dev": "env $(cat .env | grep -v '^#' | xargs) node index.js",
-	"addlink": "env $(cat .env | grep -v '^#' | xargs) node scripts/add_link.js"
+    "start": "node index.js",
+    "dev": "env $(cat .env | grep -v '^#' | xargs) node index.js",
+    "addlink": "env $(cat .env | grep -v '^#' | xargs) node scripts/add_link.js"
   },
   "dependencies": {
     "express": "^4.17.1",
