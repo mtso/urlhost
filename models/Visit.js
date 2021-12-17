@@ -21,7 +21,6 @@ const VisitSchema = new mongoose.Schema({
 });
 
 VisitSchema.index({ timestamp: -1 })
-VisitSchema.index({ mainIp: 1 })
 VisitSchema.index({ ips: 1 })
 
 module.exports = mongoose.model('visit', VisitSchema);
