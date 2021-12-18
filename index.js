@@ -12,17 +12,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 	useUnifiedTopology: true,
 });
 
-// app.get("/headers", (req, res) => {
-// 	res.json(req.headers);
-// });
-
 function parseIps(headerString) {
 	headerString = headerString || ''
 	if (headerString.length < 1) {
 		return [];
 	}
-	const ips = headerString.split(/,\s?/);
-	return ips;
+	return headerString.split(/,\s?/);
 }
 
 async function checkTimeout(req, res, next) {
@@ -128,7 +123,7 @@ app.post("/webhooks/links", validateApiKey, async (req, res) => {
 			upsert: true,
 			new: true,
 		});
-		console.log('linkUpdate', new Date(), JSON.stringify(req.body, null, 2), link.toObject());
+		console.log('linkUpdate', new Date(), JSON.stringify(req.body));
 		return res.json({
 			status: 'updated',
 		});
@@ -144,7 +139,7 @@ app.post("/webhooks/links", validateApiKey, async (req, res) => {
 		upsert: true,
 		new: true,
 	});
-	console.log('linkCreate', new Date(), JSON.stringify(req.body, null, 2), link.toObject());
+	console.log('linkCreate', new Date(), JSON.stringify(req.body));
 	res.json({
 		status: 'updated',
 	});
