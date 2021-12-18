@@ -7,6 +7,7 @@ const VisitSchema = new mongoose.Schema({
 	},
 	alias: {
 		type: mongoose.Schema.Types.String,
+		indexed: true,
 	},
 	ips: {
 		type: [mongoose.Schema.Types.String],
@@ -20,6 +21,7 @@ const VisitSchema = new mongoose.Schema({
 	timestamps: false,
 });
 
+VisitSchema.index({ alias: 1 })
 VisitSchema.index({ timestamp: -1 })
 VisitSchema.index({ ips: 1 })
 

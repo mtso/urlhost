@@ -1,16 +1,16 @@
+const bodyParser = require('body-parser');
 const express = require('express');
 const mongoose = require('mongoose');
 
 const Link = require('./models/Link');
 const Visit = require('./models/Visit');
 const IpTimeout = require('./models/IpTimeout');
+const Token = require('./models/Token');
 
 mongoose.connect(process.env.MONGODB_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 });
-
-const app = express();
 
 // app.get("/headers", (req, res) => {
 // 	res.json(req.headers);
@@ -62,7 +62,28 @@ async function captureVisit(visitData, mainIp) {
 	}
 }
 
-app.use (function (req, res, next) {
+async function validateApiKey(req, res, next) {
+	const tokenHeader = req.get('authorization');
+	if (!tokenHeader || tokenHeader === '' || !(/^bearer/i).test(tokenHeader)) {
+		return res.status(403).json({
+			error: 'unauthorized',
+			message: 'Please specify an active API key including "Bearer" prefix in Authorization header.',
+		});
+	}
+	const key = (tokenHeader || '').replace(/bearer\s+/i, '');
+	const isValid = await Token.checkIsValid(key);
+	if (!isValid) {
+		return res.status(403).json({
+			error: 'unauthorized',
+			message: 'Please specify an active API key including "Bearer" prefix in Authorization header.',
+		});
+	}
+	next();
+}
+
+const app = express();
+
+app.use(function(req, res, next) {
     if(req.get("X-Forwarded-Proto") == "http") {
 		// request was via http, so redirect to https
 		res.redirect('https://' + req.headers.host + req.url);
@@ -71,12 +92,62 @@ app.use (function (req, res, next) {
     }
 });
 
+app.use(bodyParser.json());
+
 app.get("/", (req, res) => {
 	res.sendFile("./views/index.html", {root: __dirname});
 });
 
 app.get("/favicon.ico", (req, res) => {
 	res.status(404).json({error: "not_found"});
+});
+
+app.post("/webhooks/links", validateApiKey, async (req, res) => {
+	if (req.body.sheet_name !== "live") {
+		console.log('Make sure to edit the "live" sheet!', req.body);
+		return res.json({
+			status: 'skipped',
+		});
+	}
+
+	if (!req.body.alias) {
+		console.log('Missing alias', req.body);
+		return res.json({
+			status: 'skipped'
+		})
+	}
+	
+	if (req.body.modified_column === 'alias' && !!req.body.old_value) {
+		const link = await Link.findOneAndUpdate({
+			alias: req.body.old_value,
+		}, {
+			alias: req.body.alias,
+			url: req.body.url,
+			expiresAt: req.body.expires_at,
+		}, {
+			upsert: true,
+			new: true,
+		});
+		console.log('linkUpdate', new Date(), JSON.stringify(req.body, null, 2), link.toObject());
+		return res.json({
+			status: 'updated',
+		});
+	}
+
+	const link = await Link.findOneAndUpdate({
+		alias: req.body.alias,
+	}, {
+		alias: req.body.alias,
+		url: req.body.url,
+		expiresAt: req.body.expires_at,
+	}, {
+		upsert: true,
+		new: true,
+	});
+	console.log('linkCreate', new Date(), JSON.stringify(req.body, null, 2), link.toObject());
+	res.json({
+		status: 'updated',
+	});
 });
 
 app.get('/:alias', checkTimeout, async (req, res, next) => {
