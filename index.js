@@ -1,16 +1,22 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 const Link = require('./models/Link');
 const Visit = require('./models/Visit');
 const IpTimeout = require('./models/IpTimeout');
 const Token = require('./models/Token');
 
-mongoose.connect(process.env.MONGODB_URI, {
+const admin = require('./admin');
+
+const mongooseClient = mongoose.connect(process.env.MONGODB_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 });
+
+const clientPromise = mongooseClient.then(m => m.connection.getClient());
 
 function parseIps(headerString) {
 	headerString = headerString || ''
@@ -78,6 +84,8 @@ async function validateApiKey(req, res, next) {
 
 const app = express();
 
+app.set('view engine', 'ejs');
+
 app.use(function(req, res, next) {
     if(req.get("X-Forwarded-Proto") == "http") {
 		// request was via http, so redirect to https
@@ -87,7 +95,18 @@ app.use(function(req, res, next) {
     }
 });
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(session({
+	secret: process.env.SESSION_SECRET,
+	resave: false,
+	saveUninitialized: false,
+	store: MongoStore.create({
+		clientPromise: clientPromise,
+	}),
+}));
+
+app.use("/_", admin);
 
 app.get("/", (req, res) => {
 	res.sendFile("./views/index.html", {root: __dirname});

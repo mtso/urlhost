@@ -1,0 +1,19 @@
+<% var links = undefined === links ? [] : links; %>
+
+<table>
+<% for (let i = 0; i < links.length; i++) { %>
+    <% var link = links[i]; %>
+    <% var urlText = link.url;
+    if (urlText && urlText.length > 50) {
+        urlText = urlText.substring(0, 50) + '...';
+    }
+    %>
+    <tr>
+        <td>
+            <a href="/_/links/<%= link._id %>"><%= link.alias %></a>
+            <span class="secondary">(<%= urlText %>)</span>
+            <span class="secondary">Updated <%= moment.utc(link.updatedAt).fromNow() %></span>
+        </td>
+    </tr>
+<% } %>
+</table>

@@ -1,0 +1,77 @@
+body {
+  font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+nav {
+    margin-bottom: 1em;
+}
+nav div {
+    display: inline-block;
+}
+
+.container {
+  margin: 1em;
+  max-width: 800px;
+}
+
+a {
+  font-weight: bold;
+  line-height: 1.6em;
+}
+
+span {
+    overflow-wrap: break-word;
+}
+
+table, tbody, td {
+    width: 100%;
+    display: inline-block;
+}
+
+tr {
+    border-bottom: 1px solid gray;
+    display: block;
+    padding: 0.5em 0;
+}
+tr:nth-child(1) {
+    border-top: 1px solid gray;
+}
+
+.secondary {
+    color: #555;
+}
+
+.list-container {
+    width: 100%;
+}
+.list-container div {
+    line-height: 1.5em;
+}
+
+form {
+    margin-bottom: 2em;
+}
+form input {
+    width: 100%;
+    box-sizing: border-box;
+}
+form div {
+    margin: 0.5em 0;
+}
+label {
+    display: block;
+}
+
+.documentation {
+    border: 1px solid gray;
+    background-color: #fafafa;
+    padding: 0.5em;
+}
+
+.danger {
+    background-color: darkred;
+    color: white;
+    font-weight: bold;
+    border-radius: 3px;
+    border: 1px solid gray;
+}

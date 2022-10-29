@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/_/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <nav>
+        <%- include('./partials/nav') %>
+    </nav>
+    <content>
+        <% if (user) { %>
+            <%- include('./partials/event_list') %>
+        <% } else { %>
+            <div>Log in to view.</div>
+        <% } %>
+    </content>
+</div>
+</body>
+</html>

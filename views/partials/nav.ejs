@@ -1,0 +1,22 @@
+<% var user = undefined === user ? null : user; %>
+<% if (user) { %>
+  <div>
+    <a href="/_">Changes</a>
+  </div>
+  <div>
+    <a href="/_/links">Links</a>
+  </div>
+  <div>
+    <a href="/_/new">Create Link</a>
+  </div>
+  <div>|</div>
+
+  <div><%= user && user.name %> <a href="/_/logout">Log Out</a></div>
+<% } else { %>
+  <a href="/_/auth/planningcenter">Log In with Planning Center</a>
+<% } %>
+
+<div>|</div>
+<div>
+  <a href="/_/manual">Manual</a>
+</div>

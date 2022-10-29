@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/_/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <nav>
+        <%- include('./partials/nav') %>
+    </nav>
+    <content>
+        <p>rbf.fyi hosts shortened links.</p>
+        <p>To add a link or manage existing ones, log in with your Planning Center account.</p>
+        <h2>Creating Links</h2>
+        <p>"Alias" describes the path after the URL's domain. For example, "alias" in "example.com/alias". It must be unique across all links. If a link already exists with an alias you would like to use, update the URL of the existing link instead of creating a new one.</p>
+        <p>"URL" is the URL that you would like to redirect the user to when they access the alias.</p>
+        <p>"Expires At" is an optional time after which to disable the link. When the "Expires At" date is reached, users that access the link will be shown a "not-found" page instead. The link will still show up in the admin, but will not be shown to users. This is useful for if the alias represents a yearly event where the target URL may change every year. Once the event concludes, the link can expire to prevent users from continuing to access the URL. While expired, the link can be modified and made ready for the next year's event.</p>
+        <p>Note that during link deletion, the link's alias is needed to confirm the deletion (to protect against accidental deletes).</p>
+    </content>
+</div>
+</body>
+</html>

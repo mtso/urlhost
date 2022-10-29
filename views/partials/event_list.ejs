@@ -1,0 +1,19 @@
+<% var events = undefined === events ? [] : events; %>
+
+<div class="list-container">
+<% for (let i = 0; i < events.length; i++) { %>
+    <% var event = events[i]; %>
+    <%
+        var message = "";
+        if ('link_created' === event.type) {
+            message = event.data.user.name + ' created "' + event.data.link.alias + '" ' + moment.utc(event.createdAt).fromNow() + '.';
+        } else if ('link_updated' === event.type) {
+            message = event.data.user.name + ' updated "' + event.data.link.alias + '" ' + moment.utc(event.createdAt).fromNow() + '.';
+        } else if ('link_deleted' === event.type) {
+            message = event.data.user.name + ' deleted "' + event.data.link.alias + '" ' + moment.utc(event.createdAt).fromNow() + '.';
+        }
+    %>
+
+    <div><%= message %></div>
+<% } %>
+</div>

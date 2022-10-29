@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/_/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <nav>
+        <%- include('./partials/nav') %>
+    </nav>
+    <content>
+        <% var link = undefined !== link ? link : null; %>
+        <% if (user) { %>
+
+            <% if (link) { %>
+                <div>Created At: <span title="<%= moment.utc(link.createdAt).format() %>">
+                    <%= moment.utc(link.createdAt).format('MMM DD, YYYY') %></span></div>
+                <div>Updated At: <span title="<%= moment.utc(link.updatedAt).format() %>">
+                    <%= moment.utc(link.updatedAt).format('MMM DD, YYYY') %></span></div>
+
+                <form action="/_/links/<%= link._id %>/submit" method="post">
+                    <div>
+                        <label for="alias">Alias</label>
+                        <input type="text"
+                            placeholder="alias"
+                            name="alias"
+                            id="alias"
+                            value="<%= link.alias %>"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="url">URL</label>
+                        <input type="text"
+                            placeholder="https://example.com"
+                            name="url"
+                            id="url"
+                            value="<%= link.url %>"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="expires_at">Expires At (UTC)</label>
+                        <input type="date"
+                            name="expires_at"
+                            id="expires_at"
+                            value="<%= !link.expiresAt ? null : moment(link.expiresAt).utc().format('YYYY-MM-DD') %>"
+                        />
+                    </div>
+
+                    <div>
+                        <input type="submit" value="Update" />
+                    </div>
+                </form>
+
+                <br>
+                <hr>
+                <br>
+                <form action="/_/links/<%= link._id %>/delete" method="post">
+                    <div>
+                        <label for="confirmation_text">Type in the link's alias to confirm deletion.</label>
+                        <input type="text"
+                            name="confirmation_text"
+                            id="confirmation_text"
+                            placeholder="<%= link.alias %>"
+                        />
+                    </div>
+
+                    <input type="submit" value="Delete Link" class="danger" />
+                </form>
+            <% } else { %>
+
+                <div>Link not found.</div>
+            <% } %>
+
+
+        <% } else { %>
+            <div>Log in to view.</div>
+        <% } %>
+    </content>
+</div>
+</body>
+</html>

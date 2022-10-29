@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/_/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <nav>
+        <%- include('./partials/nav') %>
+    </nav>
+    <content>
+        <% if (user) { %>
+
+            <form action="/_/new/submit" method="post">
+                <div>
+                    <label for="alias">Alias</label>
+                    <input type="text"
+                        placeholder="alias"
+                        name="alias"
+                        id="alias"
+                        required="true"
+                    />
+                </div>
+
+                <div>
+                    <label for="url">URL</label>
+                    <input type="text"
+                        placeholder="https://example.com"
+                        name="url"
+                        id="url"
+                        required="true"
+                    />
+                </div>
+
+                <div>
+                    <label for="expires_at">Expires At (UTC)</label>
+                    <input type="date"
+                        name="expires_at"
+                        id="expires_at"
+                    />
+                </div>
+
+                <div>
+                    <input type="submit" value="Create New Link" />
+                </div>
+            </form>
+
+            <div class="documentation">
+                <p>"Alias" describes the path after the URL. For example, the "mens-event" in "rbf.fyi/mens-event". It must be unique across all links. If a link already exists with an alias you would like to use, update the URL of the existing link instead of creating a new one.</p>
+                <p>"URL" is the URL that you would like to redirect the user to when they access the alias.</p>
+                <p>"Expires At" is the time after which to disable the link. When the "Expires At" date is reached, users that access the link will be shown a "not-found" page instead. The link will still show up in the admin, but will not be shown to users. This is useful for if the alias represents a yearly event where the target URL may change every year. Once the event concludes, the link can expire to prevent users from continuing to access the URL. While expired, the link can be modified and made ready for the next year's event.</p>
+            </div>
+
+        <% } else { %>
+            <div>You must log in to view.</div>
+        <% } %>
+    </content>
+</div>
+</body>
+</html>
