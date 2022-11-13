@@ -271,13 +271,14 @@ router.get('/auth/planningcenter/callback', async (req, res, next) => {
             id: _.get(person, 'data.id'),
             organizationId: _.get(person, 'meta.parent.id'),
         };
+        const tokenCreatedAt = _.get(token, 'created_at');
         const tokenData = {
             accessToken: _.get(token, 'access_token'),
             refreshToken: _.get(token, 'refresh_token'),
             tokenType: _.get(token, 'token_type'),
             expresIn: _.get(token, 'expires_in'),
             scope: _.get(token, 'scope'),
-            createdAt: _.get(token, 'created_at'),
+            createdAt: !!tokenCreatedAt ? new Date(tokenCreatedAt * 1000) : null,
         };
 
         const user = await User.createOrUpdateByPlanningCenterId(
