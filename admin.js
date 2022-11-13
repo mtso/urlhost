@@ -36,7 +36,10 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/links', async (req, res) => {
-    const links = await Link.find().sort({ alias: 1 }).limit(1000);
+    let links = [];
+    if (req.session.user) {
+        links = await Link.find().sort({ alias: 1 }).limit(1000);
+    }
 
     res.render('admin_link_list', {
         user: req.session.user,
@@ -53,7 +56,12 @@ router.get('/manual', async (req, res) => {
 });
 
 router.get('/links/:linkId', async (req, res) => {
-    const link = await Link.findOne({ _id: req.params.linkId });
+    let link = null;
+    try {
+        link = await Link.findOne({ _id: req.params.linkId });
+    } catch (err) {
+        console.warn('Failed fetching link data', err);
+    }
 
     res.render('admin_link', {
         user: req.session.user,
