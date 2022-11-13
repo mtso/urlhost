@@ -1,11 +1,12 @@
+const _ = require('lodash');
 const express = require('express');
 const request = require('superagent');
-const _ = require('lodash');
 const moment = require('moment');
 
 const User = require('./models/User');
 const Link = require('./models/Link');
 const Event = require('./models/Event');
+const Visit = require('./models/Visit');
 
 const PLANNING_CENTER_OAUTH_AUTHORIZE_URI = 'https://api.planningcenteronline.com/oauth/authorize';
 const PLANNING_CENTER_OAUTH_TOKEN_URI = 'https://api.planningcenteronline.com/oauth/token';
@@ -61,6 +62,14 @@ router.get('/links/:linkId', async (req, res) => {
         link = await Link.findOne({ _id: req.params.linkId });
     } catch (err) {
         console.warn('Failed fetching link data', err);
+    }
+
+    if (link) {
+        try {
+            link.visits = await Visit.find({ linkId: link._id }).count();
+        } catch (err) {
+            console.error('Failed counting visits', err);
+        }
     }
 
     res.render('admin_link', {

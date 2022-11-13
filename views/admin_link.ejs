@@ -18,6 +18,7 @@
                     <%= moment.utc(link.createdAt).format('MMM DD, YYYY') %></span></div>
                 <div>Updated At: <span title="<%= moment.utc(link.updatedAt).format() %>">
                     <%= moment.utc(link.updatedAt).format('MMM DD, YYYY') %></span></div>
+                <div>Visits: <%= link.visits %></div>
 
                 <form action="/_/links/<%= link._id %>/submit" method="post">
                     <div>
