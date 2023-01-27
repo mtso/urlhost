@@ -4,19 +4,19 @@ const EventSchema = new mongoose.Schema({
 	type: {
 		type: mongoose.Schema.Types.String,
 	},
-    userId: {
+		userId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'user',
 	},
-    userName: {
+		userName: {
 		type: mongoose.Schema.Types.String,
 	},
-    data: {
+		data: {
 		type: mongoose.Schema.Types.Object,
 	},
-    message: {
-        type: mongoose.Schema.Types.String,
-    },
+	message: {
+		type: mongoose.Schema.Types.String,
+	},
 }, {
 	timestamps: true,
 });

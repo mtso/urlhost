@@ -162,6 +162,7 @@ router.get('/new', async (req, res) => {
     res.render('admin_new', {
         user: req.session.user,
         moment,
+        error: req.query.error,
     });
 });
 
@@ -175,21 +176,32 @@ router.post('/new/submit', async (req, res) => {
     }
 
     if (!url) {
-        return res.redirect('/new?error=Missing%20URL')
+        return res.redirect('/_/new?error=Missing%20URL')
     }
     if (!alias) {
-        return res.redirect('/new?error=Missing%20alias')
+        return res.redirect('/_/new?error=Missing%20alias')
     }
     if (!req.session.user) {
-        return res.redirect('/new?error=User%20not%20logged-in')
+        return res.redirect('/_/new?error=User%20not%20logged-in')
     }
 
-    const link = await Link.create({
-        alias,
-        url,
-        expiresAt,
-    });
-    res.redirect('/_');
+    let link;
+    try {
+        link = await Link.create({
+            alias,
+            url,
+            expiresAt,
+        });
+        res.redirect('/_');
+    } catch (err) {
+        if (11000 === err.code) {
+            return res.redirect('/_/new?error=alias%20already%20exists')
+        } else {
+            const logId = '' + Date.now() + Math.random().toString().slice(2)
+            console.error('Unhandled database error! log=' + logId, err);
+            return res.redirect('/_/new?error=Unexpected%20error.%20log=' + logId);
+        }
+    }
 
     Event.create({
         type: 'link_created',
