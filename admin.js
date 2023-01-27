@@ -76,6 +76,7 @@ router.get('/links/:linkId', async (req, res) => {
         user: req.session.user,
         link,
         moment,
+        error: req.query.error,
     });
 });
 
