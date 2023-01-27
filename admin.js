@@ -195,7 +195,7 @@ router.post('/new/submit', async (req, res) => {
         res.redirect('/_');
     } catch (err) {
         if (11000 === err.code) {
-            return res.redirect('/_/new?error=alias%20already%20exists')
+            return res.redirect("/_/new?error=Alias%20'" + alias + "'%20already%20exists");
         } else {
             const logId = '' + Date.now() + Math.random().toString().slice(2)
             console.error('Unhandled database error! log=' + logId, err);
