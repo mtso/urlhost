@@ -105,9 +105,11 @@ router.post('/links/:linkId/submit', async (req, res) => {
         await link.save();
     } catch (err) {
         if (11000 === err.code) {
-            return res.redirect('/_/links/' + req.params.linkId + '?error=alias%20already%20exists')
+            return res.redirect('/_/links/' + req.params.linkId + "?error=Alias%20'" + req.body.alias + "'%20already%20exists");
         } else {
-            return res.redirect('/_/links/' + req.params.linkId + '?error=Unknown%20error,%20please%20try%20again')
+            const logId = '' + Date.now() + Math.random().toString().slice(2);
+            console.error("Unexpected database error log=" + logId, err);
+            return res.redirect('/_/links/' + req.params.linkId + '?error=Unexpected%20error.%20log=' + logId);
         }
     }
 

@@ -1,3 +1,5 @@
+<% var error = undefined === error ? null : error; %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +22,11 @@
                     <%= moment.utc(link.updatedAt).format('MMM DD, YYYY') %></span></div>
                 <div>Visits: <%= link.visits %></div>
 
+                <% if (error) { %>
+                    <div class="error">
+                        <%= error %>
+                    </div>
+                <% } %>
                 <form action="/_/links/<%= link._id %>/submit" method="post">
                     <div>
                         <label for="alias">Alias</label>
