@@ -1,4 +1,4 @@
-FROM node:18-slim AS builder
+FROM node:24-slim AS builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY . .
 
 #######################################################################
 
-FROM node:18-slim
+FROM node:24-slim
 
 LABEL fly_launch_runtime="nodejs"
 

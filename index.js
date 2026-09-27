@@ -11,10 +11,7 @@ const Token = require('./models/Token');
 
 const admin = require('./admin');
 
-const mongooseClient = mongoose.connect(process.env.MONGODB_URI, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-});
+const mongooseClient = mongoose.connect(process.env.MONGODB_URI);
 
 const clientPromise = mongooseClient.then(m => m.connection.getClient());
 

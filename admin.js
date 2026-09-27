@@ -66,7 +66,7 @@ router.get('/links/:linkId', async (req, res) => {
 
     if (link) {
         try {
-            link.visits = await Visit.find({ linkId: link._id }).count();
+            link.visits = await Visit.countDocuments({ linkId: link._id });
         } catch (err) {
             console.error('Failed counting visits', err);
         }
@@ -144,7 +144,7 @@ router.post('/links/:linkId/delete', async (req, res) => {
         return res.redirect('/_/links/' + req.params.linkId + '?error=Delete%20error')
     }
 
-    await link.delete();
+    await link.deleteOne();
 
     res.redirect('/_/links');
 
