@@ -170,7 +170,7 @@ app.get('/:alias', checkTimeout, async (req, res, next) => {
 	const ips = parseIps(req.get('x-forwarded-for'));
 	const mainIp = ips[0] || null;
 
-	if (!link) {
+	if (!link || link.isExpired()) {
 		next();
 	} else {
 		res.redirect(308, link.url);
