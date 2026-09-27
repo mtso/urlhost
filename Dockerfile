@@ -2,8 +2,8 @@ FROM node:18-slim AS builder
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
 
@@ -20,5 +20,5 @@ COPY --from=builder /app /app
 
 EXPOSE 8080
 
-CMD [ "yarn", "run", "start" ]
+CMD [ "npm", "start" ]
 
