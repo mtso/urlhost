@@ -4,7 +4,7 @@ const Link = require('../models/Link');
 
 describe('Link Expiration (expiresAt)', () => {
 	describe('Link.prototype.isExpired()', () => {
-		it('should return false when expiresAt is not set', () => {
+		it('returns false when expiresAt is not set', () => {
 			const link = new Link({
 				alias: 'active-link',
 				url: 'https://example.com/active',
@@ -12,7 +12,7 @@ describe('Link Expiration (expiresAt)', () => {
 			assert.strictEqual(link.isExpired(), false);
 		});
 
-		it('should return false when expiresAt is in the future', () => {
+		it('returns false when expiresAt is in the future', () => {
 			const futureDate = new Date(Date.now() + 100000);
 			const link = new Link({
 				alias: 'future-link',
@@ -22,7 +22,7 @@ describe('Link Expiration (expiresAt)', () => {
 			assert.strictEqual(link.isExpired(), false);
 		});
 
-		it('should return true when expiresAt is in the past', () => {
+		it('returns true when expiresAt is in the past', () => {
 			const pastDate = new Date(Date.now() - 100000);
 			const link = new Link({
 				alias: 'expired-link',
@@ -32,7 +32,7 @@ describe('Link Expiration (expiresAt)', () => {
 			assert.strictEqual(link.isExpired(), true);
 		});
 
-		it('should return true when expiresAt is equal to current time', () => {
+		it('returns true when expiresAt is equal to current time', () => {
 			const now = new Date();
 			const link = new Link({
 				alias: 'exact-link',
@@ -44,7 +44,7 @@ describe('Link Expiration (expiresAt)', () => {
 	});
 
 	describe('Link Access Decision (route handling)', () => {
-		it('should fall through to not-found handler when link is expired', () => {
+		it('falls through to not-found handler when link is expired', () => {
 			const pastDate = new Date(Date.now() - 1000);
 			const link = new Link({
 				alias: 'expired-link',
@@ -69,7 +69,7 @@ describe('Link Expiration (expiresAt)', () => {
 			assert.strictEqual(didRedirect, false, 'Expired link must not redirect');
 		});
 
-		it('should redirect to target URL when link has not expired', () => {
+		it('redirects to target URL when link has not expired', () => {
 			const futureDate = new Date(Date.now() + 100000);
 			const link = new Link({
 				alias: 'valid-link',
